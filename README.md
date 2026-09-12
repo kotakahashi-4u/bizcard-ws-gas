@@ -10,7 +10,7 @@
 
 ## 実演
 以下Youtubeにて、実演を公開しているため、参考とすること。  
-[こーすけ先生のGoogle塾 -【有料級】セキュアな名刺管理アプリを「Workspace Studio×AppSheet」で自作する手順を公開します-](https://www.youtube.com/watch?v=ot2Ua4P20mI)
+[こーすけ先生のGoogle塾 --]()
 
 ## 準備
 1. 以下リンクよりスプレッドシートのコピーを自身のドライブに保存する。  
