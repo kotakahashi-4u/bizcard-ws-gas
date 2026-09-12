@@ -14,7 +14,7 @@
 
 ## 準備
 1. 以下リンクよりスプレッドシートのコピーを自身のドライブに保存する。  
-   [スプレッドシートリンク](https://docs.google.com/spreadsheets/d/1rW5DPezaiUV1LRnrAcPQRzzHS_4dMAg_oRHLxMQW-qs/edit?usp=drive_link)  
+   [スプレッドシートリンク](https://docs.google.com/spreadsheets/d/1DYBLd-NVgS-qdXLWq2OkXVtUJpGn513v2FVS98JWvYg/edit?usp=sharing)  
    1. 上記よりスプレッドシートを開く
    2. メニューより [ファイル] > [コピーを作成] を押下する  
       <img width="1440" height="810" alt="Image" src="https://github.com/user-attachments/assets/37d86611-116a-464a-b0b3-a3fc8dd34ea0" />  
