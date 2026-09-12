@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>4U Card Nexus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Roboto:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  
+  <style>
+    :root {
+      --brand-primary: #23b294; /* 4Uロゴのティールカラー */
+      --brand-dark: #197a66;
+      --brand-light: #e8f7f4;
+      --brand-accent: #2ecc71;
+      --md-surface: #f7f9fa;
+      --md-card-surface: #ffffff;
+      --md-text-primary: #1e293b;
+      --md-text-secondary: #64748b;
+      --md-border: #e2e8f0;
+      --md-shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --md-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --md-shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Roboto', sans-serif;
+      background: var(--md-surface);
+      color: var(--md-text-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ヘッダー */
+    header {
+      background: #ffffff;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--md-border);
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--brand-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-title span {
+      color: var(--brand-accent);
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: none;
+      color: var(--md-text-secondary);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-icon:hover {
+      background: #f1f5f9;
+      color: var(--md-text-primary);
+    }
+
+    /* コントロールバー */
+    .control-panel {
+      padding: 12px 20px 8px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--md-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 240px;
+      background: var(--md-surface);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding: 4px 12px;
+      border: 1px solid var(--md-border);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      background: transparent;
+      color: var(--md-text-primary);
+    }
+
+    .select-custom {
+      appearance: none;
+      background: var(--md-surface) url('data:image/svg+xml;utf8,<svg fill="%2364748b" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 8px center;
+      border: 1px solid var(--md-border);
+      border-radius: 8px;
+      padding: 8px 32px 8px 12px;
+      font-size: 13px;
+      color: var(--md-text-primary);
+      cursor: pointer;
+      outline: none;
+      font-weight: 500;
+    }
+
+    /* メインコンテナ */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px 80px;
+    }
+
+    /* グループ分け表示 */
+    .group-section {
+      margin-bottom: 24px;
+    }
+
+    .group-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      background: var(--brand-light);
+      padding: 6px 14px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-gap: 14px;
+    }
+
+    /* 名刺カード */
+    .card {
+      background: var(--md-card-surface);
+      border-radius: 10px;
+      border: 1px solid var(--md-border);
+      padding: 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+
+    .card:hover {
+      box-shadow: var(--md-shadow-md);
+      transform: translateY(-2px);
+      border-color: #cbd5e1;
+    }
+
+    .card-top {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      min-height: 56px;
+    }
+
+    .card-thumb-wrap {
+      width: 80px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .business-card-thumb.landscape {
+      width: 78px;
+      height: 48px;
+    }
+
+    .business-card-thumb.portrait {
+      width: 38px;
+      height: 60px;
+    }
+
+    .business-card-thumb {
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: #f1f5f9;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .business-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .business-card-fallback {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      text-align: center;
+      line-height: 1.1;
+      padding: 4px;
+    }
+
+    .card-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .card-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--md-text-primary);
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .card-kana {
+      font-size: 11px;
+      font-weight: normal;
+      color: var(--md-text-secondary);
+    }
+
+    .card-company {
+      font-size: 13px;
+      font-weight: 500;
+      color: #475569;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-bottom {
+      border-top: 1px dashed var(--md-border);
+      padding-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--md-text-secondary);
+    }
+
+    .badge {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      max-width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fab {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: var(--brand-primary);
+      color: #ffffff;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--md-shadow-lg);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .fab:hover {
+      background: var(--brand-dark);
+      transform: scale(1.05);
+    }
+
+    .loader-container {
+      width: 100%;
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: var(--md-text-secondary);
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid var(--brand-light);
+      border-top-color: var(--brand-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* 全画面オーバーレイスピナー */
+    .global-loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .global-loading-overlay .spinner {
+      width: 54px;
+      height: 54px;
+      border-width: 5px;
+      border-color: rgba(255,255,255,0.2);
+      border-top-color: #ffffff;
+    }
+
+    .global-loading-text {
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 500;
+      margin-top: 18px;
+      letter-spacing: 0.5px;
+    }
+
+    /* モーダル共通 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-container {
+      background: #ffffff;
+      width: 92%;
+      max-width: 580px;
+      max-height: 90vh;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--md-shadow-lg);
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--md-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1; /* コンテンツ領域のみをスクロール可能に伸縮 */
+    }
+
+    /* モーダル固定フッター */
+    .modal-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--md-border);
+      background: #ffffff;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0; /* スクロール時に縮まないよう固定 */
+    }
+
+    .card-preview-img-box {
+      background: #f8fafc;
+      border: 1px solid var(--md-border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card-preview-img {
+      max-width: 100%;
+      max-height: 280px;
+      object-fit: contain;
+      box-shadow: var(--md-shadow-sm);
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .action-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--md-border);
+      background: #ffffff;
+      color: var(--brand-primary);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .action-btn:hover {
+      background: var(--brand-light);
+    }
+
+    .action-btn.disabled {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .detail-item {
+      margin-bottom: 12px;
+    }
+
+    .detail-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--md-text-secondary);
+      text-transform: uppercase;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      margin-top: 2px;
+      word-break: break-all;
+    }
+
+    /* ファイルアップロード */
+    .file-upload-card {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .file-upload-card:hover {
+      border-color: var(--brand-primary);
+      background: #f0fdfa;
+    }
+
+    .upload-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #ffffff;
+      border: 1px solid var(--md-border);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--brand-primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      margin-top: 6px;
+    }
+
+    .preview-box {
+      margin-top: 12px;
+      background: #ffffff;
+      border: 1px solid var(--md-border);
+      border-radius: 8px;
+      padding: 8px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: var(--md-shadow-sm);
+    }
+
+    .file-preview {
+      max-height: 150px;
+      max-width: 240px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: block;
+    }
+
+    .file-name-label {
+      font-size: 11px;
+      color: var(--md-text-secondary);
+      margin-top: 6px;
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* フォームパーツ */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--md-text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--md-border);
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--brand-primary);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--brand-primary);
+      color: #ffffff;
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--md-text-secondary);
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    /* トースト通知 (Snackbar) */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e293b;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 28px;
+      box-shadow: var(--md-shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 2000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      max-width: 90%;
+    }
+
+    .toast-container.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .toast-container.success {
+      background: #065f46;
+      color: #ecfdf5;
+    }
+
+    .toast-container.error {
+      background: #991b1b;
+      color: #fef2f2;
+    }
+
+    /* カスタムアラート・確認ダイアログ */
+    .custom-dialog-box {
+      width: 90%;
+      max-width: 400px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--md-shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: dialogPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes dialogPop {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dialog-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .dialog-icon.info {
+      background: #e0f2f1;
+      color: var(--brand-primary);
+    }
+
+    .dialog-icon.danger {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .dialog-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--md-text-primary);
+    }
+
+    .dialog-message {
+      font-size: 14px;
+      color: var(--md-text-secondary);
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    /* インポート・マッピングUI */
+    .mapping-table-wrap {
+      border: 1px solid var(--md-border);
+      border-radius: 8px;
+      overflow: hidden;
+      max-height: 280px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+
+    .mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--md-border);
+    }
+
+    .mapping-table th {
+      background: #f8fafc;
+      font-weight: 600;
+      color: var(--md-text-secondary);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .mapping-select {
+      width: 100%;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--md-border);
+      font-size: 13px;
+      outline: none;
+      background: #ffffff;
+    }
+
+    .mapping-select:focus {
+      border-color: var(--brand-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 全画面ローディングスピナー -->
+  <div class="global-loading-overlay" id="globalLoading">
+    <div class="spinner"></div>
+    <div class="global-loading-text" id="globalLoadingText">処理中...</div>
+  </div>
+
+  <!-- マテリアルデザイン トースト通知 -->
+  <div class="toast-container" id="toastNotification">
+    <span class="material-icons-round" id="toastIcon" style="font-size: 20px;">check_circle</span>
+    <span id="toastMessage">完了しました</span>
+  </div>
+
+  <!-- マテリアルデザイン カスタムダイアログ（Alert / Confirm 代替） -->
+  <div class="modal-overlay" id="customDialogModal" style="z-index: 1500;">
+    <div class="custom-dialog-box">
+      <div class="dialog-header">
+        <div class="dialog-icon" id="customDialogIconWrap">
+          <span class="material-icons-round" id="customDialogIcon">info</span>
+        </div>
+        <div class="dialog-title" id="customDialogTitle">確認</div>
+      </div>
+      <div class="dialog-message" id="customDialogMessage">メッセージ内容</div>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-secondary" id="btnCustomDialogCancel" style="display: none;">キャンセル</button>
+        <button type="button" class="btn btn-primary" id="btnCustomDialogConfirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-left">
+      <div class="brand-logo-wrap" id="brandLogoSlot" style="display: flex; align-items: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184.25 135.84" style="height: 34px; width: auto; display: block;">
+          <defs>
+            <style>
+              .u4-white { fill: #ffffff; stroke-width: 0px; }
+              .u4-teal  { fill: #23b294; stroke-width: 0px; }
+            </style>
+          </defs>
+          <g>
+            <path class="u4-teal" d="m184.25.67v88.88c0,14.23-4.62,25.51-13.87,33.83-8.79,7.9-20.34,12.05-34.67,12.44H.98v-44.39L58.9.67h23V.16h.02v.5h.69v86.79h.02V.67h22.83v-.67h.71v89.64c0,8.96,2.3,15.8,6.91,20.53,4.54,4.66,11.22,7.02,20.01,7.08.12,0,.23,0,.35,0,18.18,0,27.28-9.45,27.28-28.35V.67h23.53Z"/>
+            <g>
+              <path class="u4-teal" d="m160.01.67v88.24c0,18.78-8.98,28.23-26.93,28.34-.12,0-.23,0-.35,0-8.97,0-15.76-2.36-20.36-7.09-4.61-4.73-6.91-11.57-6.91-20.53V.67h-22.83v-.67h-.71v.16h.69v.5h-.69v88.79c0,5.92.76,11.31,2.27,16.17,2.21,7.09,6.03,13.07,11.46,17.93,8.69,7.78,20.29,11.87,34.77,12.25.76.03,1.53.04,2.31.04s1.53,0,2.28-.04c14.33-.39,25.88-4.54,34.67-12.44,9.24-8.32,13.87-19.59,13.87-33.83V.67h-23.53Z"/>
+              <path class="u4-white" d="m81.89,87.46V.67h-23l.32-.5h-.71l-.32.5L.27,91.41l-.27.42.27,5.7.38,8.09h58.6v30.18h22.64v-30.18h16.86v-18.17h-16.86Zm-22.64,0H23.75l33.82-53.66,1.68-2.99v56.65Z"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="header-title">Card Nexus <span>| 4U 名刺マネージャー</span></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 4px;">
+      <button class="btn-icon" onclick="openImportModal()" title="データ移行・インポート">
+        <span class="material-icons-round">file_upload</span>
+      </button>
+      <button class="btn-icon" onclick="openSettingsModal()" title="アプリ設定">
+        <span class="material-icons-round">settings</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="control-panel">
+    <div class="search-box">
+      <span class="material-icons-round" style="color: var(--md-text-secondary); font-size: 20px;">search</span>
+      <input type="text" id="searchInput" placeholder="氏名、フリガナ、会社名、役職などを検索..." oninput="filterAndRender()">
+    </div>
+    <div class="filter-group">
+      <select id="sortSelect" class="select-custom" onchange="filterAndRender()">
+        <option value="kana_asc">氏名（五十音順）</option>
+        <option value="company_group">会社名（グループ別）</option>
+        <option value="newest">登録が新しい順</option>
+      </select>
+    </div>
+  </div>
+
+  <main id="cardContainer">
+    <div class="loader-container">
+      <div class="spinner"></div>
+      <p style="font-size: 14px; font-weight: 500;">4U Card Nexus データを同期中...</p>
+    </div>
+  </main>
+
+  <button class="fab" onclick="openCreateModal()" title="新規名刺を登録">
+    <span class="material-icons-round" style="font-size: 28px;">add</span>
+  </button>
+
+  <!-- 詳細モーダル -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 style="font-size: 17px;" id="detailHeaderTitle">名刺詳細</h3>
+        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="closeModal('detailModal')">
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
+      <div class="modal-body" id="detailContent"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="openEditModal()">編集する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 編集・新規登録モーダル -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-container">
+      <form id="cardForm" onsubmit="submitForm(event)" style="display: flex; flex-direction: column; height: 100%; overflow: hidden;">
+        <div class="modal-header">
+          <h3 style="font-size: 17px;" id="editModalTitle">名刺の登録</h3>
+          <button type="button" class="btn btn-secondary" style="padding: 4px 8px;" onclick="closeModal('editModal')">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" id="formRowIndex" name="_rowIndex">
+          <input type="hidden" id="formId" name="ID">
+          <input type="hidden" id="formItemLink" name="item_link">
+
+          <!-- 名刺画像アップロード UI -->
+          <div class="form-group">
+            <label>名刺画像（撮影またはファイル選択）</label>
+            <div class="file-upload-card" id="dropArea" onclick="document.getElementById('cardFileInput').click()">
+              <input type="file" id="cardFileInput" accept="image/*" style="display: none;" onchange="handleFileSelected(event)">
+              
+              <div id="dropzoneEmpty">
+                <span class="material-icons-round" style="color: var(--brand-primary); font-size: 32px;">cloud_upload</span>
+                <p style="font-size: 13px; font-weight: 600; color: var(--md-text-primary); margin-top: 4px;">名刺画像をアップロード</p>
+                <div class="upload-action-btn">
+                  <span class="material-icons-round" style="font-size: 16px;">photo_library</span> ファイルを選択
+                </div>
+                <p style="font-size: 11px; color: var(--md-text-secondary); margin-top: 6px;">ドラッグ＆ドロップ、またはタップして選択</p>
+              </div>
+
+              <div id="dropzonePreviewWrap" style="display: none;">
+                <div class="preview-box" onclick="event.stopPropagation();">
+                  <img id="filePreviewImg" class="file-preview" alt="名刺プレビュー">
+                  <div class="file-name-label" id="previewFileName">card_image.png</div>
+                </div>
+                <div style="margin-top: 8px;">
+                  <button type="button" class="upload-action-btn" onclick="document.getElementById('cardFileInput').click();">
+                    <span class="material-icons-round" style="font-size: 16px;">autorenew</span> 画像を変更
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>会社名</label>
+            <input type="text" name="name_normalized" required>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex: 1;">
+              <label>姓</label>
+              <input type="text" name="last_name">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>名</label>
+              <input type="text" name="first_name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>氏名フリガナ（五十音ソートに使用）</label>
+            <input type="text" name="name_kana" placeholder="例: ヤマダ タロウ">
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex: 1;">
+              <label>役職</label>
+              <input type="text" name="position">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>部署</label>
+              <input type="text" name="department">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>メールアドレス</label>
+            <input type="email" name="email">
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex: 1;">
+              <label>携帯電話</label>
+              <input type="tel" name="phone_mobile">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>会社電話</label>
+              <input type="tel" name="phone_work">
+            </div>
+          </div>
+
+          <!-- 郵便番号 ＆ 住所補完 -->
+          <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <div class="form-group" style="width: 140px;">
+              <label>郵便番号</label>
+              <input type="text" name="postal_code" id="formPostalCode" placeholder="例: 100-0001" oninput="lookupAddress(this.value)">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>住所</label>
+              <input type="text" name="full_address" id="formFullAddress" placeholder="例: 東京都千代田区千代田1-1">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>業務概要 / メモ</label>
+            <textarea name="business_summary" rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- 最下部に常時固定されるアクションバー -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="btnDelete" onclick="deleteCard()" style="margin-right: auto; display: none;">削除</button>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">キャンセル</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmit">保存する</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 設定モーダル -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-container" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 style="font-size: 17px;" id="settingsModalTitle">システム設定</h3>
+        <!-- 初回強制設定時は閉じるボタンを非表示化するためIDを付与 -->
+        <button type="button" class="btn btn-secondary" id="btnSettingsCloseHeader" style="padding: 4px 8px;" onclick="closeModal('settingsModal')">
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="settingsPromptText" style="font-size: 12px; color: #d97706; margin-bottom: 14px; display: none; background: #fffbeb; padding: 8px 12px; border-radius: 6px; border: 1px solid #fef3c7;">
+          初回利用または設定が未完了です。初期設定を完了してください。
+        </p>
+        <form onsubmit="saveSettings(event)">
+          <div class="form-group">
+            <label>データベース シート名</label>
+            <input type="text" id="settingSheetName" placeholder="例: 名刺管理台帳">
+            <p style="font-size: 11px; color: var(--md-text-secondary); margin-top: 4px;">
+              ※空欄の場合はスプレッドシートの先頭（1枚目）シートを参照します。
+            </p>
+          </div>
+          <div class="form-group">
+            <label>名刺画像 格納フォルダID (Google Drive)</label>
+            <input type="text" id="settingFolderId" placeholder="例: 1a2B3c4D... (フォルダURL末尾の英数字ID)">
+            <p style="font-size: 11px; color: var(--md-text-secondary); margin-top: 4px;">
+              ※空欄の場合はGoogleドライブのルートフォルダ（マイドライブ直下）に保存されます。
+            </p>
+          </div>
+          <div class="form-actions" style="margin-top: 20px;">
+            <button type="button" class="btn btn-secondary" id="btnSettingsCloseFooter" onclick="closeModal('settingsModal')">閉じる</button>
+            <button type="submit" class="btn btn-primary" id="btnSaveSettings">設定を保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- インポートモーダル -->
+  <div class="modal-overlay" id="importModal">
+    <div class="modal-container" style="max-width: 600px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3 style="font-size: 17px;">名刺データの移行・インポート</h3>
+          <button type="button" class="btn-icon" onclick="openImportHelp()" title="移行ヘルプ・ガイドを見る" style="padding: 4px;">
+            <span class="material-icons-round" style="color: var(--brand-primary); font-size: 20px;">help_outline</span>
+          </button>
+        </div>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 8px;" onclick="closeModal('importModal')">
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- ステップ1: ファイル選択 -->
+        <div id="importStepFile">
+          <div class="file-upload-card" onclick="document.getElementById('importFileInput').click()">
+            <input type="file" id="importFileInput" accept=".csv, .vcf" style="display: none;" onchange="handleImportFileSelected(event)">
+            <span class="material-icons-round" style="color: var(--brand-primary); font-size: 36px;">cloud_upload</span>
+            <p style="font-size: 14px; font-weight: 600; color: var(--md-text-primary); margin-top: 4px;">CSV または vCard (vcf) ファイルを選択</p>
+            <p style="font-size: 12px; color: var(--md-text-secondary); margin-top: 6px;">
+              他社アプリからエクスポートした名刺データファイルを取り込みます。
+            </p>
+          </div>
+        </div>
+
+        <!-- ステップ2: カラムマッピング設定 -->
+        <div id="importStepMapping" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <p style="font-size: 13px; color: var(--md-text-primary); font-weight: 600;">
+              取込件数: <span id="importRecordCount" style="color: var(--brand-primary);">0</span> 件
+            </p>
+            <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 4px 10px;" onclick="resetImportModal()">
+              ファイルを変更
+            </button>
+          </div>
+          <p style="font-size: 12px; color: var(--md-text-secondary); margin-top: 4px;">
+            取り込み元の各項目を、本アプリのどの項目に割り当てるか選択してください。
+          </p>
+          <div class="mapping-table-wrap">
+            <table class="mapping-table">
+              <thead>
+                <tr>
+                  <th style="width: 45%;">取込元データ項目</th>
+                  <th style="width: 55%;">Card Nexus の項目</th>
+                </tr>
+              </thead>
+              <tbody id="mappingTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- インポート進行度プログレスバー -->
+        <div id="importProgressWrap" style="display: none; padding: 20px 0; text-align: center;">
+          <div class="spinner" style="margin: 0 auto 16px;"></div>
+          <p id="importProgressText" style="font-size: 14px; font-weight: 600; color: var(--md-text-primary);">
+            名刺と画像をインポート中...
+          </p>
+          <div style="background: #e2e8f0; border-radius: 10px; height: 8px; width: 100%; max-width: 320px; margin: 12px auto 0; overflow: hidden;">
+            <div id="importProgressBar" style="background: var(--brand-primary); height: 100%; width: 0%; transition: width 0.2s;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('importModal')">キャンセル</button>
+        <button type="button" class="btn btn-primary" id="btnExecuteImport" onclick="executeImport()" style="display: none;">
+          インポート実行
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    /**
+     * 名刺データの一括キャッシュ配列
+     * @type {Array<Object>}
+     */
+    let cardsCache = [];
+
+    /**
+     * 現在詳細モーダルまたは編集モーダルで選択中の名刺オブジェクト
+     * @type {Object|null}
+     */
+    let currentSelectedCard = null;
+
+    /**
+     * 新規アップロード用に選択された画像ファイルデータ（Base64ペイロード）
+     * @type {{filename: string, mimeType: string, base64: string}|null}
+     */
+    let selectedFilePayload = null;
+
+    /**
+     * 住所自動補完APIの多重呼び出しを制御するための前回検索郵便番号
+     * @type {string}
+     */
+    let lastLookupZip = '';
+
+    /**
+     * 初回起動・設定未完了状態を表すフラグ
+     * @type {boolean}
+     */
+    let isForcedSetup = false;
+
+    /**
+     * トースト通知タイマー参照
+     * @type {number|null}
+     */
+    let toastTimeout = null;
+
+    /**
+     * 画面ロード完了時の初期化処理
+     * システム初期化フラグ（isInitialized）を確認し、未完了の場合のみ設定画面を強制表示
+     */
+    window.onload = function() {
+      showLoading('初期設定を確認中...');
+      google.script.run
+        .withSuccessHandler(function(settings) {
+          hideLoading();
+          // システムプロパティとして初期保存が行われていない場合のみ強制表示
+          if (!settings || !settings.isInitialized) {
+            openSettingsModal(true);
+          } else {
+            loadData();
+          }
+        })
+        .withFailureHandler(function(err) {
+          hideLoading();
+          openSettingsModal(true);
+        })
+        .getAppSettings();
+    };
+
+    /**
+     * 画面全体のローディングスピナーを表示
+     * @param {string} [text='処理中...'] - スピナー直下に表示するメッセージ
+     */
+    function showLoading(text) {
+      document.getElementById('globalLoadingText').innerText = text || '処理中...';
+      document.getElementById('globalLoading').style.display = 'flex';
+    }
+
+    /**
+     * 画面全体のローディングスピナーを非表示化
+     */
+    function hideLoading() {
+      document.getElementById('globalLoading').style.display = 'none';
+    }
+
+    /**
+     * GASバックエンドから名刺全件データを非同期取得してキャッシュに格納
+     */
+    function loadData() {
+      google.script.run
+        .withSuccessHandler(function(data) {
+          cardsCache = data;
+          filterAndRender();
+        })
+        .withFailureHandler(function(err) {
+          document.getElementById('cardContainer').innerHTML = 
+            '<div class="loader-container"><p style="color: #ef4444;">データ同期に失敗しました: ' + escapeHtml(err.message) + '</p></div>';
+        })
+        .getCardsData();
+    }
+
+    /**
+     * Google ドライブの共有URLから高解像度サムネイルURLを生成
+     * @param {string} url - GoogleドライブのファイルURL
+     * @return {string} サムネイル画像URL（一致しない場合は空文字）
+     */
+    function getDriveThumbnail(url) {
+      if (!url) return '';
+      const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      return m ? 'https://drive.google.com/thumbnail?sz=w600&id=' + m[1] : '';
+    }
+
+    /**
+     * 名刺画像の縦横比を判定し、サムネイルコンテナのCSSクラス（portrait/landscape）を切り替え
+     * @param {HTMLImageElement} imgEl - ロード完了した画像要素
+     */
+    function handleCardImgLoad(imgEl) {
+      const isPortrait = imgEl.naturalHeight > imgEl.naturalWidth;
+      const parent = imgEl.parentElement;
+      if (parent && parent.classList.contains('business-card-thumb')) {
+        parent.classList.remove('landscape', 'portrait');
+        parent.classList.add(isPortrait ? 'portrait' : 'landscape');
+      }
+    }
+
+    /**
+     * 検索ボックスの入力値およびソート選択状態に応じて名刺を絞り込み・描画
+     */
+    function filterAndRender() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const sortMode = document.getElementById('sortSelect').value;
+
+      // 検索フィルタリング（複数主要カラムを対象に部分一致判定）
+      const filtered = cardsCache.filter(function(item) {
+        if (!q) return true;
+        return ['name_raw', 'name_normalized', 'full_name', 'name_kana', 'position', 'department', 'estimated_industry', 'full_address']
+          .some(function(k) {
+            return (item[k] || '').toString().toLowerCase().indexOf(q) !== -1;
+          });
+      });
+
+      const container = document.getElementById('cardContainer');
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="loader-container"><p>該当する名刺は見つかりませんでした。</p></div>';
+        return;
+      }
+
+      let html = '';
+
+      if (sortMode === 'company_group') {
+        // 会社名単位のグループ化
+        const groups = {};
+        filtered.forEach(function(item) {
+          const company = item.name_normalized || item.name_raw || '所属なし・個人';
+          if (!groups[company]) groups[company] = [];
+          groups[company].push(item);
+        });
+
+        // 会社名五十音順ソート
+        const sortedCompanies = Object.keys(groups).sort(function(a, b) {
+          return a.localeCompare(b, 'ja');
+        });
+
+        sortedCompanies.forEach(function(company) {
+          html += '<div class="group-section">' +
+                    '<div class="group-header"><span class="material-icons-round" style="font-size: 16px;">domain</span> ' + escapeHtml(company) + ' (' + groups[company].length + ')</div>' +
+                    '<div class="group-grid">';
+          groups[company].forEach(function(item) {
+            html += generateCardHtml(item);
+          });
+          html += '</div></div>';
+        });
+
+      } else {
+        // 通常リストソート
+        const sorted = filtered.slice();
+        if (sortMode === 'kana_asc') {
+          // 氏名フリガナ順（五十音順）
+          sorted.sort(function(a, b) {
+            const kA = a.name_kana || a.full_name || '';
+            const kB = b.name_kana || b.full_name || '';
+            return kA.localeCompare(kB, 'ja');
+          });
+        } else if (sortMode === 'newest') {
+          // 登録が新しい順（行番号降順）
+          sorted.sort(function(a, b) {
+            return b._rowIndex - a._rowIndex;
+          });
+        }
+
+        html += '<div class="group-grid">';
+        sorted.forEach(function(item) {
+          html += generateCardHtml(item);
+        });
+        html += '</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    /**
+     * 単一の名刺カードコンポーネントHTML文字列を生成
+     * @param {Object} item - 名刺データオブジェクト
+     * @return {string} カードHTML文字列
+     */
+    function generateCardHtml(item) {
+      const thumb = getDriveThumbnail(item.item_link);
+      const comp = escapeHtml(item.name_normalized || item.name_raw || '会社名未設定');
+      const fullName = escapeHtml(item.full_name || ((item.last_name || '') + ' ' + (item.first_name || '')).trim());
+      const kana = escapeHtml(item.name_kana || '');
+      const post = escapeHtml(item.position || item.department || '役職なし');
+      const industry = item.estimated_industry ? '<span class="badge">' + escapeHtml(item.estimated_industry) + '</span>' : '';
+
+      let thumbHtml = '';
+      if (thumb) {
+        thumbHtml = '<div class="business-card-thumb landscape">' +
+                      '<img src="' + thumb + '" alt="Card" onload="handleCardImgLoad(this)" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">' +
+                      '<div class="business-card-fallback" style="display: none;">' + escapeHtml(comp.slice(0, 10)) + '</div>' +
+                    '</div>';
+      } else {
+        thumbHtml = '<div class="business-card-thumb landscape"><div class="business-card-fallback">' + escapeHtml(comp.slice(0, 10)) + '</div></div>';
+      }
+
+      return '<div class="card" onclick="openDetailModal(' + item._rowIndex + ')">' +
+               '<div class="card-top">' +
+                 '<div class="card-thumb-wrap">' + thumbHtml + '</div>' +
+                 '<div class="card-info">' +
+                   '<div class="card-name">' + fullName + (kana ? ' <span class="card-kana">' + kana + '</span>' : '') + '</div>' +
+                   '<div class="card-company">' + comp + '</div>' +
+                 '</div>' +
+               '</div>' +
+               '<div class="card-bottom">' +
+                 '<span>' + post + '</span>' +
+                 industry +
+               '</div>' +
+             '</div>';
+    }
+
+    /**
+     * 指定された行番号の名刺詳細モーダルを開く
+     * @param {number} rowIndex - スプレッドシート上の行番号 (_rowIndex)
+     */
+    function openDetailModal(rowIndex) {
+      const item = cardsCache.find(function(c) { return c._rowIndex === rowIndex; });
+      if (!item) return;
+      currentSelectedCard = item;
+
+      const thumb = getDriveThumbnail(item.item_link);
+      const tel = item.phone_mobile || item.phone_work || '';
+      const email = item.email || '';
+      const address = item.full_address || '';
+
+      let html = '';
+      if (thumb) {
+        html += '<div class="card-preview-img-box">' +
+                  '<img src="' + thumb + '" class="card-preview-img" alt="名刺原本">' +
+                '</div>';
+      }
+
+      // クイックアクションバー（電話・メール・マップ連携）
+      html += '<div class="action-row">';
+      html += tel ? '<a class="action-btn" href="tel:' + tel + '"><span class="material-icons-round">phone</span>通話</a>'
+                  : '<div class="action-btn disabled"><span class="material-icons-round">phone</span>通話</div>';
+      html += email ? '<a class="action-btn" href="mailto:' + email + '"><span class="material-icons-round">mail</span>メール</a>'
+                    : '<div class="action-btn disabled"><span class="material-icons-round">mail</span>メール</div>';
+      html += address ? '<a class="action-btn" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address) + '" target="_blank"><span class="material-icons-round">place</span>地図</a>'
+                      : '<div class="action-btn disabled"><span class="material-icons-round">place</span>地図</div>';
+      html += '</div>';
+
+      const fields = [
+        { label: '会社名', val: escapeHtml(item.name_normalized || item.name_raw) },
+        { label: '氏名', val: escapeHtml((item.full_name || '') + (item.name_kana ? ' (' + item.name_kana + ')' : '')) },
+        { label: '部署・役職', val: escapeHtml([item.department, item.position].filter(Boolean).join(' ')) },
+        { label: 'メールアドレス', val: escapeHtml(item.email) },
+        { label: '携帯番号', val: escapeHtml(item.phone_mobile) },
+        { label: '会社代表番号', val: escapeHtml(item.phone_work) },
+        { label: '所在地', val: item.full_address ? escapeHtml((item.postal_code ? '〒' + item.postal_code + ' ' : '') + item.full_address) : '' },
+        { label: '業種', val: escapeHtml(item.estimated_industry) },
+        { label: '事業概要', val: escapeHtml(item.business_summary) },
+        { label: '原本URL', val: item.item_link ? '<a href="' + item.item_link + '" target="_blank" style="color: var(--brand-primary); font-weight: 500;">Google ドライブで確認</a>' : '' },
+        { label: '備考', val: escapeHtml(item.notes) }
+      ];
+
+      fields.forEach(function(f) {
+        if (f.val) {
+          html += '<div class="detail-item"><div class="detail-label">' + f.label + '</div><div class="detail-value">' + f.val + '</div></div>';
+        }
+      });
+
+      document.getElementById('detailHeaderTitle').innerText = item.full_name || '名刺詳細';
+      document.getElementById('detailContent').innerHTML = html;
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    /**
+     * 郵便番号API（zipcloud）を利用して住所を自動補完
+     * ※住所欄がすでに入力済みの場合は上書きを行わない
+     * @param {string} val - 入力された郵便番号文字列
+     */
+    function lookupAddress(val) {
+      const zip = (val || '').replace(/[^0-9]/g, '');
+      if (zip.length !== 7 || zip === lastLookupZip) return;
+      lastLookupZip = zip;
+
+      const addressInput = document.getElementById('formFullAddress');
+      if (addressInput.value.trim() !== '') return;
+
+      fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode=' + zip)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data && data.results && data.results.length > 0) {
+            // 非同期取得完了時の再チェック（ユーザー手入力への保護）
+            if (addressInput.value.trim() === '') {
+              const r = data.results[0];
+              addressInput.value = r.address1 + r.address2 + r.address3;
+            }
+          }
+        })
+        .catch(function(err) {
+          console.warn('住所自動補完エラー:', err);
+        });
+    }
+
+    /**
+     * 新規名刺登録モーダルを初期化して開く
+     */
+    function openCreateModal() {
+      const form = document.getElementById('cardForm');
+      form.reset();
+      resetDropzone();
+      lastLookupZip = '';
+
+      document.getElementById('formRowIndex').value = '';
+      document.getElementById('formId').value = '';
+      document.getElementById('formItemLink').value = '';
+      document.getElementById('editModalTitle').innerText = '名刺の新規登録';
+      document.getElementById('btnDelete').style.display = 'none';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    /**
+     * 現在選択中の名刺データをフォームに設定して編集モーダルを開く
+     */
+    function openEditModal() {
+      if (!currentSelectedCard) return;
+      closeModal('detailModal');
+
+      const form = document.getElementById('cardForm');
+      form.reset();
+      resetDropzone();
+      lastLookupZip = '';
+
+      document.getElementById('editModalTitle').innerText = '名刺の編集';
+      document.getElementById('btnDelete').style.display = 'inline-block';
+      document.getElementById('formRowIndex').value = currentSelectedCard._rowIndex;
+      document.getElementById('formId').value = currentSelectedCard.ID || '';
+      document.getElementById('formItemLink').value = currentSelectedCard.item_link || '';
+
+      // フォーム各コントロールへの値復元
+      for (const key in currentSelectedCard) {
+        if (form.elements[key]) {
+          form.elements[key].value = currentSelectedCard[key];
+        }
+      }
+
+      // 既存の名刺画像が存在する場合はサムネイルプレビューを表示
+      const thumb = getDriveThumbnail(currentSelectedCard.item_link);
+      if (thumb) {
+        showPreview(thumb, '登録済み画像');
+      }
+
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    /**
+     * 名刺画像ファイル選択ダイアログのチェンジイベントハンドラ
+     * 選択ファイルをBase64エンコードしてプレビューを表示
+     * @param {Event} event - changeイベントオブジェクト
+     */
+    function handleFileSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        selectedFilePayload = {
+          filename: file.name,
+          mimeType: file.type || 'image/png',
+          base64: base64
+        };
+        showPreview(base64, file.name);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /**
+     * 画像アップロード領域のプレビュー表示切り替え
+     * @param {string} src - 画像のData URLまたはHTTP URL
+     * @param {string} [label='名刺画像'] - 表示用ファイル名
+     */
+    function showPreview(src, label) {
+      document.getElementById('dropzoneEmpty').style.display = 'none';
+      document.getElementById('dropzonePreviewWrap').style.display = 'block';
+      document.getElementById('filePreviewImg').src = src;
+      document.getElementById('previewFileName').innerText = label || '名刺画像';
+    }
+
+    /**
+     * 画像アップロード領域を初期状態にリセット
+     */
+    function resetDropzone() {
+      document.getElementById('cardFileInput').value = '';
+      document.getElementById('filePreviewImg').src = '';
+      document.getElementById('dropzoneEmpty').style.display = 'block';
+      document.getElementById('dropzonePreviewWrap').style.display = 'none';
+      selectedFilePayload = null;
+    }
+
+    /**
+     * マテリアルトースト通知（Snackbar）を表示
+     * 
+     * @param {string} message - 表示メッセージ
+     * @param {'info'|'success'|'error'} [type='info'] - 通知スタイル種別
+     */
+    function showToast(message, type) {
+      const toast = document.getElementById('toastNotification');
+      const msgEl = document.getElementById('toastMessage');
+      const iconEl = document.getElementById('toastIcon');
+
+      msgEl.innerText = message;
+      toast.className = 'toast-container ' + (type || 'info');
+
+      if (type === 'success') {
+        iconEl.innerText = 'check_circle';
+      } else if (type === 'error') {
+        iconEl.innerText = 'error';
+      } else {
+        iconEl.innerText = 'info';
+      }
+
+      toast.classList.add('show');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(function() {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    /**
+     * ブラウザ標準 alert() を代替するカスタムアラートモーダル
+     * 
+     * @param {string} message - 通知本文
+     * @param {string} [title='お知らせ'] - ダイアログタイトル
+     * @param {'info'|'danger'} [type='info'] - アラート種別
+     * @return {Promise<void>} ユーザーがOKを押した際に解決するPromise
+     */
+    function showCustomAlert(message, title, type) {
+      return new Promise(function(resolve) {
+        const modal = document.getElementById('customDialogModal');
+        const titleEl = document.getElementById('customDialogTitle');
+        const msgEl = document.getElementById('customDialogMessage');
+        const iconWrap = document.getElementById('customDialogIconWrap');
+        const iconEl = document.getElementById('customDialogIcon');
+        const btnCancel = document.getElementById('btnCustomDialogCancel');
+        const btnConfirm = document.getElementById('btnCustomDialogConfirm');
+
+        titleEl.innerText = title || 'お知らせ';
+        msgEl.innerText = message;
+        btnCancel.style.display = 'none';
+
+        if (type === 'danger') {
+          iconWrap.className = 'dialog-icon danger';
+          iconEl.innerText = 'warning';
+          btnConfirm.className = 'btn btn-danger';
+        } else {
+          iconWrap.className = 'dialog-icon info';
+          iconEl.innerText = 'info';
+          btnConfirm.className = 'btn btn-primary';
+        }
+
+        btnConfirm.onclick = function() {
+          modal.style.display = 'none';
+          resolve();
+        };
+
+        modal.style.display = 'flex';
+      });
+    }
+
+    /**
+     * ブラウザ標準 confirm() を代替するカスタム確認モーダル
+     * 
+     * @param {string} message - 確認本文
+     * @param {string} [title='確認'] - ダイアログタイトル
+     * @param {boolean} [isDestructive=false] - 削除等、破壊的操作を行うか
+     * @return {Promise<boolean>} 確定で true、キャンセルで false を返却するPromise
+     */
+    function showCustomConfirm(message, title, isDestructive) {
+      return new Promise(function(resolve) {
+        const modal = document.getElementById('customDialogModal');
+        const titleEl = document.getElementById('customDialogTitle');
+        const msgEl = document.getElementById('customDialogMessage');
+        const iconWrap = document.getElementById('customDialogIconWrap');
+        const iconEl = document.getElementById('customDialogIcon');
+        const btnCancel = document.getElementById('btnCustomDialogCancel');
+        const btnConfirm = document.getElementById('btnCustomDialogConfirm');
+
+        titleEl.innerText = title || '確認';
+        msgEl.innerText = message;
+        btnCancel.style.display = 'inline-block';
+
+        if (isDestructive) {
+          iconWrap.className = 'dialog-icon danger';
+          iconEl.innerText = 'delete_outline';
+          btnConfirm.className = 'btn btn-danger';
+          btnConfirm.innerText = '削除する';
+        } else {
+          iconWrap.className = 'dialog-icon info';
+          iconEl.innerText = 'help_outline';
+          btnConfirm.className = 'btn btn-primary';
+          btnConfirm.innerText = 'OK';
+        }
+
+        btnCancel.onclick = function() {
+          modal.style.display = 'none';
+          resolve(false);
+        };
+
+        btnConfirm.onclick = function() {
+          modal.style.display = 'none';
+          resolve(true);
+        };
+
+        modal.style.display = 'flex';
+      });
+    }
+
+    /**
+     * 名刺データの登録・更新フォームのサブミット処理
+     * @param {Event} event - submitイベントオブジェクト
+     */
+    function submitForm(event) {
+      event.preventDefault();
+      const form = document.getElementById('cardForm');
+      const formData = {};
+      const fd = new FormData(form);
+      fd.forEach(function(value, key) {
+        formData[key] = value;
+      });
+
+      // 姓名が入力されている場合に full_name を生成
+      if (formData.last_name || formData.first_name) {
+        formData.full_name = ((formData.last_name || '') + ' ' + (formData.first_name || '')).trim();
+      }
+
+      const isNew = !formData._rowIndex;
+      showLoading(selectedFilePayload ? '名刺画像を保存・データ更新中...' : 'データを保存中...');
+
+      const runner = google.script.run
+        .withSuccessHandler(function() {
+          hideLoading();
+          closeModal('editModal');
+          showToast(isNew ? '名刺を新規登録しました' : '名刺情報を更新しました', 'success');
+          loadData();
+        })
+        .withFailureHandler(function(err) {
+          hideLoading();
+          showCustomAlert('保存に失敗しました: ' + err.message, 'エラー', 'danger');
+        });
+
+      if (isNew) {
+        runner.createCardData(formData, selectedFilePayload);
+      } else {
+        runner.updateCardData(formData, selectedFilePayload);
+      }
+    }
+
+    /**
+     * 現在編集中の名刺データをスプレッドシートから削除
+     */
+    function deleteCard() {
+      showCustomConfirm('この名刺データを削除してもよろしいですか？\nこの操作は取り消せません。', '名刺の削除確認', true)
+        .then(function(confirmed) {
+          if (!confirmed) return;
+
+          const rIdx = document.getElementById('formRowIndex').value;
+          showLoading('名刺を削除中...');
+          google.script.run
+            .withSuccessHandler(function() {
+              hideLoading();
+              closeModal('editModal');
+              showToast('名刺データを削除しました', 'success');
+              loadData();
+            })
+            .withFailureHandler(function(err) {
+              hideLoading();
+              showCustomAlert('削除に失敗しました: ' + err.message, 'エラー', 'danger');
+            })
+            .deleteCardData(rIdx);
+        });
+    }
+
+    /**
+     * システム設定モーダルを開き、保存済み設定値を各フォームに復元
+     * 
+     * @param {boolean} [isForced=false] - 初回必須設定モードかどうかのフラグ
+     */
+    function openSettingsModal(isForced) {
+      isForcedSetup = !!isForced;
+
+      // 初回強制設定時は閉じられないよう閉じるボタンを非表示化
+      document.getElementById('btnSettingsCloseHeader').style.display = isForcedSetup ? 'none' : 'inline-flex';
+      document.getElementById('btnSettingsCloseFooter').style.display = isForcedSetup ? 'none' : 'inline-block';
+      document.getElementById('settingsPromptText').style.display = isForcedSetup ? 'block' : 'none';
+      document.getElementById('settingsModalTitle').innerText = isForcedSetup ? '初期セットアップ (システム設定)' : 'システム設定';
+
+      showLoading('設定を取得中...');
+      google.script.run
+        .withSuccessHandler(function(settings) {
+          hideLoading();
+          document.getElementById('settingFolderId').value = (settings && settings.folderId) || '';
+          document.getElementById('settingSheetName').value = (settings && settings.sheetName) || '';
+          document.getElementById('settingsModal').style.display = 'flex';
+        })
+        .withFailureHandler(function(err) {
+          hideLoading();
+          document.getElementById('settingsModal').style.display = 'flex';
+        })
+        .getAppSettings();
+    }
+
+    /**
+     * システム設定フォームのサブミット処理
+     * バックエンドへ保存し、初回セットアップ時は成功後にメインデータを初読み込み
+     * 
+     * @param {Event} e - submitイベントオブジェクト
+     */
+    function saveSettings(e) {
+      e.preventDefault();
+      showLoading('設定を検証・保存中...');
+      const settings = {
+        folderId: document.getElementById('settingFolderId').value.trim(),
+        sheetName: document.getElementById('settingSheetName').value.trim()
+      };
+
+      google.script.run
+        .withSuccessHandler(function() {
+          hideLoading();
+          closeModal('settingsModal');
+          showToast('システム設定を保存しました', 'success');
+          loadData();
+        })
+        .withFailureHandler(function(err) {
+          hideLoading();
+          showCustomAlert('設定保存エラー: ' + err.message, '設定エラー', 'danger');
+        })
+        .saveAppSettings(settings);
+    }
+    
+    /**
+     * 指定IDのモーダルウィンドウを非表示化
+     * @param {string} id - モーダル要素のID
+     */
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    /**
+     * XSS防止のためのHTML特殊文字エスケープヘルパー
+     * @param {string|number} str - エスケープ対象文字列
+     * @return {string} エスケープ済み文字列
+     */
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /**
+     * インポート対象のパース済みローデータ保持
+     * @type {Array<Object>}
+     */
+    let importParsedRawRecords = [];
+
+    /**
+     * Card Nexus 側の受け入れ先カラム定義
+     * @constant {Array<{key: string, label: string}>}
+     */
+    const TARGET_APP_FIELDS = [
+      { key: 'name_normalized', label: '会社名' },
+      { key: 'last_name', label: '姓' },
+      { key: 'first_name', label: '名' },
+      { key: 'full_name', label: '氏名（フルネーム）' },
+      { key: 'name_kana', label: '氏名フリガナ' },
+      { key: 'position', label: '役職' },
+      { key: 'department', label: '部署' },
+      { key: 'email', label: 'メールアドレス' },
+      { key: 'phone_mobile', label: '携帯電話番号' },
+      { key: 'phone_work', label: '会社電話番号' },
+      { key: 'postal_code', label: '郵便番号' },
+      { key: 'full_address', label: '住所' },
+      { key: 'business_summary', label: '業務概要 / メモ' }
+    ];
+
+    /**
+     * インポートモーダルを開く
+     */
+    function openImportModal() {
+      resetImportModal();
+      document.getElementById('importModal').style.display = 'flex';
+    }
+
+    /**
+     * インポートモーダル内の状態を初期ファイル選択画面にリセット
+     */
+    function resetImportModal() {
+      importParsedRawRecords = [];
+      document.getElementById('importFileInput').value = '';
+      document.getElementById('importStepFile').style.display = 'block';
+      document.getElementById('importStepMapping').style.display = 'none';
+      document.getElementById('btnExecuteImport').style.display = 'none';
+      document.getElementById('mappingTableBody').innerHTML = '';
+    }
+
+    /**
+     * インポート対象ファイル（CSV / VCF）の選択ハンドラ
+     * Shift_JIS / UTF-8 両対応でバイナリからデコード
+     * 
+     * @param {Event} event - changeイベントオブジェクト
+     */
+    function handleImportFileSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const ext = file.name.split('.').pop().toLowerCase();
+      const reader = new FileReader();
+
+      showLoading('ファイルを解析中...');
+
+      reader.onload = function(e) {
+        hideLoading();
+        const buffer = e.target.result;
+        let content = '';
+
+        // まずUTF-8でデコードし、文字化け（置換文字 \uFFFD）が多ければShift_JISで再デコード
+        const utf8Decoder = new TextDecoder('utf-8', { fatal: false });
+        content = utf8Decoder.decode(buffer);
+        if (content.includes('\uFFFD')) {
+          const sjisDecoder = new TextDecoder('shift-jis', { fatal: false });
+          content = sjisDecoder.decode(buffer);
+        }
+
+        try {
+          if (ext === 'vcf') {
+            importParsedRawRecords = parseVcf(content);
+          } else {
+            importParsedRawRecords = parseCsv(content);
+          }
+
+          if (importParsedRawRecords.length === 0) {
+            showCustomAlert('取り込み可能な名刺データが見つかりませんでした。ファイル形式をご確認ください。', '警告', 'danger');
+            return;
+          }
+
+          renderMappingTable();
+        } catch (err) {
+          showCustomAlert('ファイル解析エラー: ' + err.message, '解析失敗', 'danger');
+        }
+      };
+
+      // エンコーディング自動判定のため ArrayBuffer として読み込み
+      reader.readAsArrayBuffer(file);
+    }
+
+    /**
+     * CSV文字列をオブジェクト配列にパース（簡易パーサー）
+     * 
+     * @param {string} text - CSVテキスト
+     * @return {Array<Object>} パース済みレコード配列
+     */
+    function parseCsv(text) {
+      const lines = text.split(/\r\n|\n|\r/).filter(l => l.trim() !== '');
+      if (lines.length < 2) return [];
+
+      const headers = lines[0].split(',').map(h => h.replace(/^["']|["']$/g, '').trim());
+      const records = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        // カンマ区切り（簡易対応）
+        const cols = lines[i].split(',').map(c => c.replace(/^["']|["']$/g, '').trim());
+        const row = {};
+        headers.forEach((header, idx) => {
+          row[header] = cols[idx] || '';
+        });
+        records.push(row);
+      }
+      return records;
+    }
+
+    /**
+     * QUOTED-PRINTABLE 形式（=E6=9D=91... 等）の文字列をUTF-8文字列へ復元
+     * 
+     * @param {string} input - エンコードされた文字列
+     * @return {string} デコード済みテキスト
+     */
+    function decodeQuotedPrintable(input) {
+      if (!input || !input.includes('=')) return input;
+      try {
+        // ソフト改行（=\r\n または =\n）を削除
+        const clean = input.replace(/=\r?\n/g, '');
+        // =XX 形式のエスケープシーケンスをバイト配列化してUTF-8としてデコード
+        const bytes = [];
+        for (let i = 0; i < clean.length; i++) {
+          if (clean[i] === '=' && i + 2 < clean.length && /^[0-9A-Fa-f]{2}$/.test(clean.substr(i + 1, 2))) {
+            bytes.push(parseInt(clean.substr(i + 1, 2), 16));
+            i += 2;
+          } else {
+            bytes.push(clean.charCodeAt(i));
+          }
+        }
+        return new TextDecoder('utf-8').decode(new Uint8Array(bytes));
+      } catch (e) {
+        return input;
+      }
+    }
+
+    /**
+     * RFC規格に準拠した vCard (.vcf) パーサー
+     * 行フォールディング結合、エンコーディング属性、拡張接頭辞を包括的に解析
+     * 
+     * @param {string} text - vCardテキスト全文
+     * @return {Array<Object>} パース済み名刺オブジェクト配列
+     */
+    function parseVcf(text) {
+      // 1. 行フォールディング（改行直後の空白/タブによる折り返し）を1行に結合
+      const unfoldedText = text.replace(/\r?\n[ \t]/g, '');
+      const rawCards = unfoldedText.split(/BEGIN:VCARD/i).filter(c => c.trim() !== '');
+      const records = [];
+
+      rawCards.forEach(cardText => {
+        const lines = cardText.split(/\r?\n/);
+        const item = {};
+
+        lines.forEach(line => {
+          const trimmed = line.trim();
+          if (!trimmed || trimmed.toUpperCase() === 'END:VCARD') return;
+
+          const colonIdx = trimmed.indexOf(':');
+          if (colonIdx === -1) return;
+
+          // キー部（属性含む）と値部を分離
+          const rawKey = trimmed.substring(0, colonIdx);
+          let val = trimmed.substring(colonIdx + 1).trim();
+
+          // item1.ADR などの拡張プレフィックスを除去し、基本タグ名を取得
+          const cleanKeyPart = rawKey.replace(/^item\d+\./i, '');
+          const propName = cleanKeyPart.split(';')[0].toUpperCase().trim();
+          const upperKey = cleanKeyPart.toUpperCase();
+
+          // QUOTED-PRINTABLE の場合はデコード
+          if (upperKey.includes('ENCODING=QUOTED-PRINTABLE') || upperKey.includes('ENCODING=Q')) {
+            val = decodeQuotedPrintable(val);
+          }
+
+          // vCardのエスケープ文字 (\, や \;) をアンエスケープ
+          val = val.replace(/\\([,;\\])/g, '$1');
+
+          // 代表的なタグに応じた項目への割り当て
+          if (propName === 'FN') {
+            item['氏名'] = val;
+          } else if (propName === 'N' && !item['氏名']) {
+            const nParts = val.split(';');
+            const last = nParts[0] || '';
+            const first = nParts[1] || '';
+            item['姓'] = last;
+            item['名'] = first;
+            item['氏名'] = (last + ' ' + first).trim();
+          } else if (propName === 'SOUND' || upperKey.includes('X-PHONETIC') || upperKey.includes('SORT-STRING')) {
+            item['氏名フリガナ'] = val.replace(/;/g, ' ').trim();
+          } else if (propName === 'ORG') {
+            const orgParts = val.split(';');
+            item['会社名'] = orgParts[0] || '';
+            if (orgParts[1] && !item['部署']) {
+              item['部署'] = orgParts[1];
+            }
+          } else if (propName === 'TITLE' || propName === 'ROLE') {
+            item['役職'] = val;
+          } else if (propName === 'EMAIL') {
+            if (!item['メールアドレス']) item['メールアドレス'] = val;
+          } else if (propName === 'TEL') {
+            if (upperKey.includes('CELL') || upperKey.includes('MOBILE')) {
+              item['携帯電話番号'] = val;
+            } else if (!item['会社電話番号']) {
+              item['会社電話番号'] = val;
+            }
+          } else if (propName === 'ADR') {
+            const adrParts = val.split(';');
+            if (adrParts.length >= 6) {
+              if (adrParts[5]) item['郵便番号'] = adrParts[5];
+              const pref = adrParts[4] || '';
+              const city = adrParts[3] || '';
+              const street = adrParts[2] || '';
+              item['住所'] = (pref + city + street).trim();
+            } else {
+              item['住所'] = val.replace(/;/g, ' ').trim();
+            }
+          } else if (propName === 'NOTE') {
+            item['業務概要 / メモ'] = val;
+          } else if (propName === 'PHOTO') {
+            // vCard PHOTOタグ内のBase64名刺画像を抽出
+            const mimeMatch = upperKey.match(/TYPE=([A-Z0-9]+)/);
+            const mimeType = mimeMatch ? ('image/' + mimeMatch[1].toLowerCase()) : 'image/jpeg';
+            item._photoBase64 = val.replace(/\s+/g, ''); // 空白・改行の完全除去
+            item._photoMimeType = mimeType;
+            item['名刺原本画像'] = '【埋め込み画像あり】';
+          }
+        });
+
+        if (Object.keys(item).length > 0) {
+          records.push(item);
+        }
+      });
+      return records;
+    }
+
+    /**
+     * データ移行・インポートヘルプページを正規Web Apps URL経由で別タブ表示
+     */
+    function openImportHelp() {
+      showLoading('ヘルプページを開いています...');
+      google.script.run
+        .withSuccessHandler(function(baseUrl) {
+          hideLoading();
+          if (!baseUrl) {
+            showCustomAlert('WebアプリのURLが取得できませんでした。デプロイ設定をご確認ください。', 'エラー', 'danger');
+            return;
+          }
+          const helpUrl = baseUrl + '?page=help';
+          window.open(helpUrl, '_blank');
+        })
+        .withFailureHandler(function(err) {
+          hideLoading();
+          showCustomAlert('ヘルプの起動に失敗しました: ' + err.message, 'エラー', 'danger');
+        })
+        .getAppUrl();
+    }
+
+    /**
+     * 解析結果のカラム一覧からマッピングテーブルUIを描画
+     */
+    function renderMappingTable() {
+      const sourceHeaders = Object.keys(importParsedRawRecords[0] || {});
+      const tbody = document.getElementById('mappingTableBody');
+      tbody.innerHTML = '';
+
+      sourceHeaders.forEach(sourceKey => {
+        const tr = document.createElement('tr');
+
+        // 自動推測マッピングロジック
+        let matchedTargetKey = '';
+        const lowerSource = sourceKey.toLowerCase();
+
+        TARGET_APP_FIELDS.forEach(field => {
+          if (lowerSource.includes(field.label.toLowerCase()) || lowerSource.includes(field.key.toLowerCase())) {
+            matchedTargetKey = field.key;
+          }
+          // 日本語別名推測
+          if (lowerSource.includes('会社') || lowerSource.includes('組織') || lowerSource.includes('org')) matchedTargetKey = 'name_normalized';
+          if (lowerSource.includes('氏名') || lowerSource.includes('名前') || lowerSource.includes('name')) matchedTargetKey = 'full_name';
+          if (lowerSource.includes('カナ') || lowerSource.includes('ふりがな')) matchedTargetKey = 'name_kana';
+          if (lowerSource.includes('役職') || lowerSource.includes('肩書') || lowerSource.includes('title')) matchedTargetKey = 'position';
+          if (lowerSource.includes('メール') || lowerSource.includes('mail')) matchedTargetKey = 'email';
+          if (lowerSource.includes('携帯') || lowerSource.includes('モバイル') || lowerSource.includes('cell')) matchedTargetKey = 'phone_mobile';
+          if (lowerSource.includes('tel') || lowerSource.includes('電話')) matchedTargetKey = 'phone_work';
+          if (lowerSource.includes('郵便') || lowerSource.includes('zip') || lowerSource.includes('postal')) matchedTargetKey = 'postal_code';
+          if (lowerSource.includes('住所') || lowerSource.includes('所在地') || lowerSource.includes('address')) matchedTargetKey = 'full_address';
+        });
+
+        let selectHtml = `<select class="mapping-select" data-source-key="${escapeHtml(sourceKey)}">
+          <option value="">（取り込まない）</option>`;
+        
+        TARGET_APP_FIELDS.forEach(field => {
+          const selected = (field.key === matchedTargetKey) ? 'selected' : '';
+          selectHtml += `<option value="${field.key}" ${selected}>${escapeHtml(field.label)}</option>`;
+        });
+        selectHtml += `</select>`;
+
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(sourceKey)}</strong></td>
+          <td>${selectHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('importRecordCount').innerText = importParsedRawRecords.length;
+      document.getElementById('importStepFile').style.display = 'none';
+      document.getElementById('importStepMapping').style.display = 'block';
+      document.getElementById('btnExecuteImport').style.display = 'inline-block';
+    }
+
+    /**
+     * マッピング設定に基づいてレコードを成形し、小分けチャンクに分割して安全に順次送信
+     */
+    function executeImport() {
+      const selects = document.querySelectorAll('.mapping-select');
+      const mapping = {};
+      let hasMapping = false;
+
+      selects.forEach(sel => {
+        const sourceKey = sel.getAttribute('data-source-key');
+        const targetKey = sel.value;
+        if (targetKey) {
+          mapping[sourceKey] = targetKey;
+          hasMapping = true;
+        }
+      });
+
+      if (!hasMapping) {
+        showCustomAlert('少なくとも1つ以上の項目をCard Nexusに割り当ててください。', 'マッピング未設定', 'danger');
+        return;
+      }
+
+      // レコードの整形（画像情報を含むメタデータも保持）
+      const payloadRecords = importParsedRawRecords.map(raw => {
+        const item = {};
+        for (const [sourceKey, targetKey] of Object.entries(mapping)) {
+          if (raw[sourceKey] !== undefined) {
+            item[targetKey] = raw[sourceKey];
+          }
+        }
+        // PHOTO画像データがある場合は引き継ぎ
+        if (raw._photoBase64) {
+          item._photoBase64 = raw._photoBase64;
+          item._photoMimeType = raw._photoMimeType;
+        }
+        return item;
+      });
+
+      // UIをプログレス表示に切り替え
+      document.getElementById('importStepMapping').style.display = 'none';
+      document.getElementById('btnExecuteImport').style.display = 'none';
+      document.getElementById('importProgressWrap').style.display = 'block';
+
+      // 1リクエストあたりのペイロード上限を約 3.5MB (3,500,000 bytes) に設定
+      const MAX_PAYLOAD_BYTES = 3.5 * 1024 * 1024;
+      const chunks = [];
+      let currentChunk = [];
+      let currentChunkSize = 0;
+
+      // 各レコードのデータサイズを測定しながら動的にチャンクを編成
+      payloadRecords.forEach(record => {
+        // 文字列長から概算バイト数を算出（日本語等は2〜3バイト考慮）
+        const recordBytes = new Blob([JSON.stringify(record)]).size;
+
+        if (currentChunk.length > 0 && (currentChunkSize + recordBytes > MAX_PAYLOAD_BYTES)) {
+          chunks.push(currentChunk);
+          currentChunk = [record];
+          currentChunkSize = recordBytes;
+        } else {
+          currentChunk.push(record);
+          currentChunkSize += recordBytes;
+        }
+      });
+      if (currentChunk.length > 0) {
+        chunks.push(currentChunk);
+      }
+
+      let currentChunkIdx = 0;
+      let totalImportedCount = 0;
+
+      /**
+       * 1チャンクずつ再帰的に送信するストリーミングエンジン
+       */
+      function sendNextChunk() {
+        if (currentChunkIdx >= chunks.length) {
+          // 全チャンク完了
+          closeModal('importModal');
+          showToast(totalImportedCount + ' 件の名刺データを正常にインポートしました', 'success');
+          loadData();
+          return;
+        }
+
+        const chunk = chunks[currentChunkIdx];
+        const progressPercent = Math.round((currentChunkIdx / chunks.length) * 100);
+        document.getElementById('importProgressBar').style.width = progressPercent + '%';
+        document.getElementById('importProgressText').innerText = 
+          '名刺データをインポート中... (' + (totalImportedCount) + ' / ' + payloadRecords.length + ' 件)';
+
+        google.script.run
+          .withSuccessHandler(function(res) {
+            totalImportedCount += (res && res.count) || chunk.length;
+            currentChunkIdx++;
+            sendNextChunk();
+          })
+          .withFailureHandler(function(err) {
+            showCustomAlert('インポートが途中で中断しました: ' + err.message, 'インポートエラー', 'danger');
+            resetImportModal();
+            loadData();
+          })
+          .importCardsWithImagesBatch(chunk);
+      }
+
+      sendNextChunk();
+    }
+  </script>
+</body>
+</html>
