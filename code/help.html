@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>4U Card Nexus - データ移行ガイド</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <style>
+    :root {
+      --brand-primary: #23b294;
+      --brand-dark: #197a66;
+      --brand-light: #e8f7f4;
+      --md-surface: #f8fafc;
+      --md-card-surface: #ffffff;
+      --md-text-primary: #1e293b;
+      --md-text-secondary: #64748b;
+      --md-border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--md-surface);
+      color: var(--md-text-primary);
+      line-height: 1.7;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    .title {
+      font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: var(--md-text-secondary);
+      margin-top: 6px;
+    }
+    .section-card {
+      background: var(--md-card-surface);
+      border-radius: 12px;
+      border: 1px solid var(--md-border);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--brand-light);
+      padding-bottom: 8px;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 14px 0;
+    }
+    .comparison-table th, .comparison-table td {
+      border: 1px solid var(--md-border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .comparison-table th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+    .step-list {
+      padding-left: 20px;
+      font-size: 14px;
+    }
+    .step-list li {
+      margin-bottom: 10px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-vcf { background: #dbeafe; color: #1e40af; }
+    .badge-csv { background: #fef3c7; color: #92400e; }
+    .note-box {
+      background: #f0fdfa;
+      border-left: 4px solid var(--brand-primary);
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title">
+        <span class="material-icons-round" style="color: var(--brand-primary); font-size: 32px;">help_outline</span>
+        4U Card Nexus データ移行ガイド
+      </div>
+      <p class="subtitle">他社名刺管理サービスや連絡先から本アプリへの移行手順と対応フォーマット</p>
+    </header>
+
+    <div class="section-card">
+      <div class="section-title">
+        <span class="material-icons-round">description</span>
+        対応ファイル形式の特徴と違い
+      </div>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">フォーマット</th>
+            <th style="width: 35%;">メリット</th>
+            <th style="width: 40%;">名刺画像の扱い</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>vCard (.vcf)</strong><br><span class="badge badge-vcf">推奨</span></td>
+            <td>1ファイルで全件移行可能。文字化けしにくく、住所・フリガナ等の項目マッピングが極めて高精度。</td>
+            <td><strong>ファイル内に画像（PHOTOタグ）が含まれている場合、Googleドライブへ自動保存・連携されます。</strong></td>
+          </tr>
+          <tr>
+            <td><strong>CSV (.csv)</strong><br><span class="badge badge-csv">汎用</span></td>
+            <td>Excel等で事前に不要な行を整理・編集できる。ほぼ全ての名刺アプリで出力可能。</td>
+            <td>名刺画像の実体は含まれません（テキストデータのみの登録となります）。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">
+        <span class="material-icons-round">apps</span>
+        主要名刺管理サービスからの移行手順
+      </div>
+      
+      <h4 style="font-size: 15px; margin-bottom: 8px;">1. Eight からの移行（名刺画像も含めた完全移行）</h4>
+      <ol class="step-list">
+        <li>PC版 Eight にログインし、「名刺のダウンロード」から名刺データ（ZIPファイル）をダウンロードします。</li>
+        <li>ダウンロードしたZIPファイルをPC上で解凍します（CSVファイルと、名刺画像が入ったフォルダが展開されます）。</li>
+        <li>本アプリの「設定」で指定した<strong>名刺画像格納フォルダ（Google ドライブ）</strong>を開き、解凍された名刺画像ファイルをすべてドラッグ＆ドロップでアップロードします。</li>
+        <li>本アプリの「インポート」を開き、解凍された <strong>CSVファイル</strong> を選択します。</li>
+        <li>カラム割り当て画面で、画像ファイル名が記載されている項目を <strong>Card Nexus の「名刺原本リンク」</strong> に指定して実行します。<br>
+          <small style="color: var(--md-text-secondary);">※Googleドライブ内にアップロードされた同一ファイル名の画像と自動的に紐付けが行われます。</small>
+        </li>
+      </ol>
+
+      <h4 style="font-size: 15px; margin-top: 18px; margin-bottom: 8px;">2. vCard (.vcf) によるワンストップ移行（スマホ・連絡先アプリ）</h4>
+      <ol class="step-list">
+        <li>スマホの連絡先アプリや、Eightの「連絡先用エクスポート（vCard）」を出力します。</li>
+        <li>本アプリのインポート画面で <strong>.vcf ファイルを選択するだけ</strong> で、埋め込まれている名刺写真も含めて自動でGoogleドライブへ小分けアップロードされます。</li>
+      </ol>
+
+      <h4 style="font-size: 15px; margin-top: 18px; margin-bottom: 8px;">2. iPhone / Android / Google コンタクトからの移行</h4>
+      <ol class="step-list">
+        <li>スマホの連絡先アプリ、または Google コンタクト（Web版）を開きます。</li>
+        <li>「エクスポート」を選択し、<strong>vCard (iOS / 連絡先用)</strong> を選択して保存します。</li>
+        <li>名刺写真が連絡先アバターに登録されている場合、インポート時に自動でGoogleドライブへ名刺原本として保存されます。</li>
+      </ol>
+
+      <div class="note-box">
+        <strong>💡 大容量データも安心の分割送信仕様</strong><br>
+        vCard内に大量の高画質名刺画像が含まれている場合でも、本アプリがブラウザ上で自動的に小分け（チャンク）に分割してGoogleドライブへ連続同期するため、ファイル容量制限エラーを起こすことなく安全に移行できます。
+      </div>
+    </div>
+  </div>
+</body>
+</html>
